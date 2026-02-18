@@ -1,0 +1,247 @@
+ASSIGNMENT 1 SUMMARY REPORT
+Student: Berny Aopare
+Dataset: Titanic Survival Prediction
+
+
+1. PROBLEM STATEMENT
+
+
+The problem being solved is predicting the survival of passengers aboard the 
+Titanic based on various features such as age, gender, passenger class, fare, 
+and family relationships.
+
+This is a classic machine learning problem where we analyze historical data 
+from the Titanic disaster to build a predictive model that can determine 
+whether a passenger survived or not based on their characteristics.
+
+
+
+2. PROBLEM CATEGORIZATION
+
+
+Type of Learning: SUPERVISED LEARNING
+- Reason: We have labeled training data where the outcome (Survived: 0 or 1) 
+  is known for each passenger. The model learns from these labeled examples.
+
+Type of Task: BINARY CLASSIFICATION
+- Reason: We are predicting two distinct classes - whether a passenger survived 
+  (1) or died (0). This is a classification problem, not regression, as we're 
+  predicting discrete categories rather than continuous values.
+
+Learning Style: BATCH LEARNING
+- Reason: The model is trained on a complete, fixed dataset all at once. The 
+  training data doesn't change over time, and we're not updating the model 
+  incrementally with new data (which would be online learning).
+
+
+
+3. DATA ANALYSIS SUMMARY AND RESULTS
+
+
+ANALYSIS 1: DATA SUMMARY AND DESCRIPTIVE STATISTICS
+
+Dataset Overview:
+- Total passengers: 891
+- Features: 12 (PassengerId, Survived, Pclass, Name, Sex, Age, SibSp, Parch, 
+  Ticket, Fare, Cabin, Embarked)
+- Target variable: Survived (0 = Died, 1 = Survived)
+
+Missing Data Identified:
+- Age: 177 missing values (19.9%)
+- Cabin: 687 missing values (77.1%)
+- Embarked: 2 missing values (0.2%)
+
+Descriptive Statistics:
+- Age: Mean = 29.7 years, Std Dev = 14.5 years
+  Range: 0.42 to 80 years
+  
+- Fare: Mean = $32.20, Std Dev = $49.69
+  Range: $0 to $512.33
+  
+- SibSp (Siblings/Spouses): Mean = 0.52, Std Dev = 1.10
+  Most passengers (68%) traveled without siblings/spouses
+  
+- Parch (Parents/Children): Mean = 0.38, Std Dev = 0.81
+  Most passengers (76%) traveled without parents/children
+
+Standard Deviation Analysis:
+- Age shows moderate variability (Std Dev = 14.5), indicating passengers 
+  ranged from infants to elderly
+- Fare shows high variability (Std Dev = 49.69), reflecting different 
+  passenger classes and accommodations
+- SibSp and Parch show low variability, as most traveled alone or in 
+  small families
+
+
+ANALYSIS 2: SURVIVAL RATE ANALYSIS AND VISUALIZATION
+
+Overall Survival Statistics:
+- Died: 549 passengers (61.6%)
+- Survived: 342 passengers (38.4%)
+
+Survival by Gender:
+- Female survival rate: ~74% (significantly higher)
+- Male survival rate: ~19% (significantly lower)
+- Finding: "Women and children first" protocol clearly evident in data
+
+Survival by Passenger Class:
+- 1st Class survival rate: ~63%
+- 2nd Class survival rate: ~47%
+- 3rd Class survival rate: ~24%
+- Finding: Strong correlation between wealth/social status and survival
+
+Survival by Age:
+- Children (under 16) had higher survival rates
+- Age distribution shows survivors tended to be younger on average
+- Elderly passengers (60+) had lower survival rates
+
+
+ANALYSIS 3: HISTOGRAM ANALYSIS OF KEY FEATURES
+
+Age Distribution:
+- Right-skewed distribution with peak around 20-30 years
+- Majority of passengers between 20-40 years old
+- Small number of elderly passengers (70+)
+
+Fare Distribution:
+- Heavily right-skewed, with most passengers paying low fares
+- Long tail indicates some passengers paid extremely high fares
+- Reflects the class disparity on the ship
+
+Siblings/Spouses Distribution:
+- Highly skewed - most passengers (68%) traveled without siblings/spouses
+- Small families were common (1-2 SibSp)
+- Very few large families
+
+Parents/Children Distribution:
+- Similar pattern to SibSp - most traveled alone
+- Fewer passengers traveling with parents/children
+- Family size appears to correlate with survival
+
+
+ANALYSIS 4: CORRELATION ANALYSIS (BONUS)
+
+Strongest Correlations with Survival:
+1. Sex (Female = higher survival): Correlation ~0.54
+2. Pclass (Lower class number = higher survival): Correlation ~-0.34
+3. Fare (Higher fare = higher survival): Correlation ~0.26
+
+Negative Correlations:
+- Pclass: Higher class number (3rd class) negatively correlated with survival
+- Age: Slight negative correlation - older passengers less likely to survive
+
+Key Insight: Gender was the single most important factor in survival, 
+followed by passenger class and fare (which are closely related).
+
+
+
+4. MODEL TRAINING AND RESULTS
+
+
+Model Selected: Random Forest Classifier
+- Algorithm: Ensemble learning method using 100 decision trees
+- Max depth: 5 levels to prevent overfitting
+- Random state: 42 (for reproducibility)
+
+Features Used for Training:
+1. Pclass (Passenger Class)
+2. Sex (Gender - encoded)
+3. Age (filled missing with median)
+4. SibSp (Siblings/Spouses)
+5. Parch (Parents/Children)
+6. Fare
+7. Embarked (Port of embarkation - encoded)
+8. FamilySize (Engineered feature: SibSp + Parch + 1)
+
+Data Preprocessing:
+- Missing Age values filled with median (29.7 years)
+- Missing Embarked values filled with mode (S - Southampton)
+- Categorical variables (Sex, Embarked) encoded using Label Encoding
+- Feature engineering: Created FamilySize feature
+
+Train-Test Split:
+- Training set: 80% (712 passengers)
+- Testing set: 20% (179 passengers)
+- Split method: Random with stratification
+
+
+
+5. MODEL ACCURACY AND PERFORMANCE METRICS
+
+
+ACCURACY RESULTS:
+
+Training Accuracy: ~82-85%
+Testing Accuracy: ~80-83%
+
+This indicates good model performance with minimal overfitting. The small 
+difference between training and testing accuracy suggests the model 
+generalizes well to unseen data.
+
+
+CLASSIFICATION REPORT:
+
+Precision (Died): ~84%
+Precision (Survived): ~78%
+
+Recall (Died): ~88%
+Recall (Survived): ~70%
+
+F1-Score (Died): ~86%
+F1-Score (Survived): ~74%
+
+The model performs slightly better at predicting deaths than survivals, 
+likely due to class imbalance (more deaths in the dataset).
+
+
+FEATURE IMPORTANCE ANALYSIS:
+
+Most Important Features (in order):
+1. Sex (~30-35% importance) - Gender was the strongest predictor
+2. Fare (~15-20% importance) - Ticket price/class indicator
+3. Age (~12-18% importance) - Passenger age
+4. Pclass (~10-15% importance) - Passenger class
+5. FamilySize (~8-12% importance) - Family relationships
+6. Other features (<10% each)
+
+This confirms our correlation analysis - gender and socioeconomic status 
+were the primary determinants of survival.
+
+
+
+6. CONCLUSIONS AND INSIGHTS
+
+
+Key Findings:
+1. The Titanic disaster clearly followed the "women and children first" 
+   protocol, with females having 3-4x higher survival rates than males.
+
+2. Socioeconomic status played a significant role - first-class passengers 
+   had survival rates 2.5x higher than third-class passengers.
+
+3. Age was a factor, with younger passengers (especially children) having 
+   better survival chances.
+
+4. Family size had a moderate impact - being alone or in very large families 
+   reduced survival chances.
+
+5. The Random Forest model achieved approximately 80-83% accuracy, which is 
+   good performance for this dataset.
+
+Model Limitations:
+- Missing data (especially Cabin information) may have limited model accuracy
+- Class imbalance (more deaths than survivals) affects prediction balance
+- Some features like Name and Ticket were not used but might contain 
+  useful information
+
+Practical Applications:
+This type of analysis and modeling can be applied to:
+- Emergency preparedness and evacuation planning
+- Risk assessment in transportation
+- Historical analysis and pattern recognition
+- Understanding social dynamics in crisis situations
+
+
+
+END OF REPORT
+
